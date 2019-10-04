@@ -10,6 +10,11 @@ namespace Calculadora
         public Form1()
         {
             InitializeComponent();
+            LimpaOperacao();
+        }
+
+        private void LimpaOperacao()
+        {
             Dado1 = "";
             Dado2 = "";
             Operacao = "";
@@ -52,6 +57,11 @@ namespace Calculadora
                     Operacao = valor;
 
                     txtDisplay.Text = txtDisplay.Text + valor;
+                    break;
+
+                case 4:
+                    txtDisplay.Text = valor;
+                    LimpaOperacao();
                     break;
 
                 case 5:
@@ -162,7 +172,7 @@ namespace Calculadora
 
         private void btnLimpa_Click(object sender, EventArgs e)
         {
-            atualizarDisplay(",", 4);
+            atualizarDisplay("", 4);
         }
     }
 }
