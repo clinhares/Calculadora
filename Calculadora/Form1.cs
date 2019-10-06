@@ -13,81 +13,60 @@ namespace Calculadora
             LimpaOperacao();
         }
 
-        private void LimpaOperacao()
+        private void addDado(String valor)
         {
-            Dado1 = "";
-            Dado2 = "";
-            Operacao = "";
-            temporario = "";
-            resultado = "";
-        }
+            if (resultado != "")
+            {
+                Dado1 = resultado;
+                Dado2 = "";
+                resultado = "";
+            }
+            else if (Dado1 == "")
+            {
+                Dado1 = temporario;
+            }
+            else if (Dado2 == "")
+            {
+                Dado2 = temporario;
+            }
 
-        /*
-         * tipo 1 = numero
-         * tipo 2 = virgula
-         * tipo 3 = operacao
-         * tipo 4 = limpar
-         * tipo 5 = calcular
-         *
-         */
+            temporario = "";
+        }
 
         private void atualizarDisplay(String valor, short Tipo)
         {
-            float valor1, valor2;
-
+            double i = 1.2 + 2.3;
             switch (Tipo)
             {
                 case 1:
                     temporario += valor;
-                    txtDisplay.Text = txtDisplay.Text + valor;
                     break;
 
                 case 2:
-                    temporario += ".";
-                    txtDisplay.Text = txtDisplay.Text + valor;
+                    temporario += ",";
                     break;
 
                 case 3:
-                    if (Dado1 == "")
-                    {
-                        Dado1 = temporario;
-                    }
-                    temporario = "";
-
+                    addDado(temporario);
                     Operacao = valor;
-
-                    txtDisplay.Text = txtDisplay.Text + valor;
                     break;
 
                 case 4:
-                    txtDisplay.Text = valor;
                     LimpaOperacao();
                     break;
 
                 case 5:
-                    if (Dado1 == "")
-                    {
-                        Dado1 = temporario;
-                    }
-                    else
-                    {
-                        Dado2 = temporario;
-                    }
-
-                    if (Dado1 != "" && Dado2 != "")
-                    {
-                        float.TryParse(Dado1, out valor1);
-                        float.TryParse(Dado2, out valor2);
-                        resultado = (valor + valor2).ToString();
-                    }
-
-                    txtDisplay.Text = txtDisplay.Text + valor + resultado;
-                    break;
-
-                default:
-                    txtDisplay.Text = txtDisplay.Text + resultado;
+                    addDado(temporario);
+                    resultado = Processsar(Operacao);
+                    valor += resultado;
                     break;
             }
+            txtDisplay.Text = txtDisplay.Text + valor;
+        }
+
+        private void btn0_Click(object sender, EventArgs e)
+        {
+            atualizarDisplay("0", 1);
         }
 
         private void btn1_Click(object sender, EventArgs e)
@@ -135,29 +114,9 @@ namespace Calculadora
             atualizarDisplay("9", 1);
         }
 
-        private void btn0_Click(object sender, EventArgs e)
-        {
-            atualizarDisplay("0", 1);
-        }
-
         private void btnDivide_Click(object sender, EventArgs e)
         {
             atualizarDisplay("/", 3);
-        }
-
-        private void btnVezes_Click(object sender, EventArgs e)
-        {
-            atualizarDisplay("*", 3);
-        }
-
-        private void btnMenos_Click(object sender, EventArgs e)
-        {
-            atualizarDisplay("-", 3);
-        }
-
-        private void btnMais_Click(object sender, EventArgs e)
-        {
-            atualizarDisplay("+", 3);
         }
 
         private void btnIgual_Click(object sender, EventArgs e)
@@ -165,14 +124,79 @@ namespace Calculadora
             atualizarDisplay("=", 5);
         }
 
+        private void btnLimpa_Click(object sender, EventArgs e)
+        {
+            atualizarDisplay("", 4);
+        }
+
+        private void btnMais_Click(object sender, EventArgs e)
+        {
+            atualizarDisplay("+", 3);
+        }
+
+        private void btnMenos_Click(object sender, EventArgs e)
+        {
+            atualizarDisplay("-", 3);
+        }
+
+        private void btnVezes_Click(object sender, EventArgs e)
+        {
+            atualizarDisplay("*", 3);
+        }
+
         private void btnVirgula_Click(object sender, EventArgs e)
         {
             atualizarDisplay(",", 2);
         }
 
-        private void btnLimpa_Click(object sender, EventArgs e)
+        private void LimpaOperacao()
         {
-            atualizarDisplay("", 4);
+            Dado1 = "";
+            Dado2 = "";
+            Operacao = "";
+            temporario = "";
+            resultado = "";
+            txtDisplay.Text = "";
         }
+
+        private string Processsar(string operacao)
+        {
+            double valor1, valor2;
+
+            if (Dado1 != "" && Dado2 != "")
+            {
+                double.TryParse(Dado1, out valor1);
+                double.TryParse(Dado2, out valor2);
+
+                switch (operacao)
+                {
+                    case "+":
+                        return (valor1 + valor2).ToString();
+
+                    case "-":
+                        return (valor1 - valor2).ToString();
+
+                    case "*":
+                        return (valor1 * valor2).ToString();
+
+                    case "/":
+                        return (valor1 / valor2).ToString();
+
+                    default:
+                        return "Erro";
+                }
+            }
+
+            return "Valor invalido";
+        }
+
+        /*
+         * tipo 1 = numero
+         * tipo 2 = virgula
+         * tipo 3 = operacao
+         * tipo 4 = limpar
+         * tipo 5 = calcular
+         *
+         */
     }
 }
